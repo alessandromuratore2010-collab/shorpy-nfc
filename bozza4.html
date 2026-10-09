@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shorpy | Stampa & Personalizzazione</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome per icone premium -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% -20%, #3b0764 0%, #170229 55%, #090114 100%);
+      --card-bg: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(233, 213, 255, 0.12);
+      --card-border-hover: rgba(253, 224, 71, 0.6);
+      --text-main: #f3e8ff;
+      --text-muted: #cbd5e1;
+      --accent-gold: #fde047;
+      --accent-purple: #c084fc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 16px 70px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Effetto alone luminoso superiore */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* --- LOGO FISSO IN ALTO A SINISTRA --- */
+    .top-left-logo {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(23, 2, 41, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(233, 213, 255, 0.15);
+      padding: 6px 12px 6px 6px;
+      border-radius: 50px;
+      z-index: 100;
+      text-decoration: none;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .top-left-logo:hover {
+      border-color: var(--accent-gold);
+      transform: scale(1.02);
+    }
+
+    .top-left-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--accent-gold);
+    }
+
+    .top-left-logo span {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding-right: 4px;
+    }
+
+    /* --- SCHERMATA INIZIALE (SPLASH SCREEN) --- */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, #4c1d95 0%, #170229 70%, #090114 100%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-logo-container {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 0 30px rgba(253, 224, 71, 0.3);
+      margin-bottom: 24px;
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    .splash-logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .splash-title {
+      font-family: 'Cinzel', serif;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .splash-subtitle {
+      color: var(--accent-purple);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 36px;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #fde047 0%, #ca8a04 100%);
+      color: #170229;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      padding: 16px 48px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(253, 224, 71, 0.4);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(253, 224, 71, 0.6);
+    }
+
+    /* --- VISTE DELLA PAGINA (HOME vs CHI SIAMO) --- */
+    .view {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .view.active {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+      pointer-events: auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 35px;
+      max-width: 460px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ffffff 20%, #e9d5ff 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: var(--accent-purple);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 460px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .card {
+      position: relative;
+      display: block;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 18px;
+      text-decoration: none;
+      color: #ffffff;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 17px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, rgba(253, 224, 71, 0.5), transparent 60%) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .card img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 6px;
+    }
+
+    .card-title {
+      letter-spacing: 0.5px;
+      background: linear-gradient(to right, #ffffff, #f3e8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 25px 50px rgba(107, 33, 168, 0.4), 0 0 25px rgba(253, 224, 71, 0.12);
+      border-color: var(--card-border-hover);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover img {
+      transform: scale(1.03);
+    }
+
+    .card:hover .card-icon {
+      background: var(--accent-gold);
+      color: #170229;
+      transform: translateX(3px);
+    }
+
+    /* Sezioni informative */
+    .info-container {
+      max-width: 460px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      text-align: left;
+    }
+
+    .info-card h2 {
+      font-family: 'Cinzel', serif;
+      color: #ffffff;
+      font-size: 19px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-card h2 i {
+      color: var(--accent-gold);
+      font-size: 17px;
+    }
+
+    .info-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .info-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Box Interattivo Chi Siamo */
+    .interactive-box {
+      background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(76, 29, 149, 0.3));
+      border: 1px dashed var(--accent-gold);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .interactive-box:hover {
+      background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(76, 29, 149, 0.45));
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(253, 224, 71, 0.2);
+    }
+
+    .interactive-box h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--accent-gold);
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .interactive-box p {
+      font-size: 13px;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .hidden-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out, opacity 0.5s ease;
+      opacity: 0;
+      text-align: left;
+      margin-top: 0;
+    }
+
+    .hidden-details.show {
+      max-height: 350px;
+      opacity: 1;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(253, 224, 71, 0.2);
+    }
+
+    .service-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-list li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .service-list li i {
+      color: var(--accent-gold);
+      font-size: 12px;
+    }
+
+    .magic-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #fde047 0%, #ca8a04 100%);
+      color: #170229;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(253, 224, 71, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .magic-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(253, 224, 71, 0.5);
+    }
+
+    #magic-output {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--accent-gold);
+      text-align: center;
+      font-style: italic;
+      min-height: 20px;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 20px rgba(253, 224, 71, 0.2); }
+      50% { box-shadow: 0 0 35px rgba(253, 224, 71, 0.5); }
+      100% { box-shadow: 0 0 20px rgba(253, 224, 71, 0.2); }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 30px 14px 60px;
+      }
+      header h1 {
+        font-size: 30px;
+      }
+      .card img {
+        height: 230px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGO FISSO IN ALTO A SINISTRA -->
+  <a class="top-left-logo" onclick="switchView('home')">
+    <img src="images.jpg" alt="Logo">
+    <span>Shorpy</span>
+  </a>
+
+  <!-- SCHERMATA DI APERTURA (SPLASH SCREEN) -->
+  <div id="splash-screen">
+    <div class="splash-logo-container">
+      <img src="images.jpg" alt="Logo Shorpy">
+    </div>
+    <h2 class="splash-title">Shorpy</h2>
+    <p class="splash-subtitle">Stampa & Personalizzazione</p>
+    <button class="start-btn" onclick="enterSite()">
+      <span>INIZIA</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- VISTA 1: HOME (Biglietto da visita) -->
+  <div id="home-view" class="view">
+    <header>
+      <div class="brand-badge">
+        <i class="fa-solid fa-gem"></i> Official Partner
+      </div>
+      <h1>Shorpy</h1>
+      <p>Stampa & Personalizzazione • Eccellenza dal 2010[cite: 3, 4]</p>
+    </header>
+
+    <main class="cards">
+
+      <!-- Card 1: Apre la pagina Chi Siamo integrata -->
+      <a class="card" onclick="switchView('chi-siamo')">
+        <img src="king.jpg" alt="Chi siamo">
+        <div class="card-content">
+          <span class="card-title">Chi Siamo</span>
+          <div class="card-icon">
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2: Sito Web -->
+      <a class="card"
+         href="https://shorpy.it/"
+         target="_blank"
+         rel="noopener noreferrer">
+        <img src="images.jpg" alt="Il nostro sito">
+        <div class="card-content">
+          <span class="card-title">Visita il Sito Web</span>
+          <div class="card-icon">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3: Recensioni -->
+      <a class="card"
+         href="https://search.google.com/local/writereview?placeid=ChIJ4f2oqrltiEcR8G14-ZJh9s8"
+         target="_blank"
+         rel="noopener noreferrer">
+        <img src="recensioni-google.jpg" alt="Lascia una recensione">
+        <div class="card-content">
+          <span class="card-title">Recensioni Google</span>
+          <div class="card-icon">
+            <i class="fa-solid fa-star"></i>
+          </div>
+        </div>
+      </a>
+
+    </main>
+
+    <section style="max-width: 460px; width: 100%; margin: 40px auto 0; padding: 32px; background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid var(--card-border); border-radius: 22px; text-align: left; z-index: 1;">
+      <h2 style="font-family: 'Cinzel', serif; color: #ffffff; font-size: 20px; margin-bottom: 16px; text-align: center;">Chi siamo e cosa facciamo</h2>
+      <p style="color: var(--text-muted); font-size: 14px; line-height: 1.7; text-align: center; margin-bottom: 16px;">
+        Shorpy si distingue per la qualità dei materiali e l'attenzione al dettaglio[cite: 1]. 
+        Ci occupiamo di personalizzazione di abbigliamento, oggettistica personalizzata e gadget promozionali[cite: 1].
+      </p>
+      <p style="text-align: center;"><strong>Contattaci per maggiori informazioni!</strong></p>
+    </section>
+  </div>
+
+  <!-- VISTA 2: PAGINA CHI SIAMO DETTAGLIATA -->
+  <div id="chi-siamo-view" class="view">
+    <header>
+      <div class="brand-badge">
+        <i class="fa-solid fa-gem"></i> La Nostra Storia
+      </div>
+      <h1>Chi Siamo</h1>
+      <p>Eccellenza, Passione e Cura del Dettaglio dal 2010[cite: 3, 4]</p>
+    </header>
+
+    <div class="info-container">
+      <div class="info-card">
+        <h2><i class="fa-solid fa-bullseye"></i> La Nostra Filosofia</h2>
+        <p>
+          <strong>Shorpy</strong> nasce con un obiettivo preciso: trasformare le idee in realtà attraverso la massima qualità di stampa e personalizzazione[cite: 1, 3, 4]. 
+          Crediamo che ogni capo e ogni oggetto debbano raccontare una storia unica, curata in ogni singolo dettaglio[cite: 1].
+        </p>
+      </div>
+
+      <div class="info-card">
+        <h2><i class="fa-solid fa-location-dot"></i> La Nostra Sede a Torino</h2>
+        <p>
+          Operiamo con passione nel cuore di Torino, in <strong>via Monginevro 76</strong>[cite: 1]. Un punto di riferimento consolidato per professionisti, aziende, eventi e privati che cercano affidabilità, stile e lavorazioni impeccabili.
+        </p>
+      </div>
+
+      <!-- Box Interattivo Servizi -->
+      <div class="interactive-box" onclick="toggleDetails()">
+        <h3>✨ Clicca per scoprire i nostri servizi nel dettaglio</h3>
+        <p>(Tocca qui per aprire il cassetto magico)</p>
+        
+        <div id="details-panel" class="hidden-details">
+          <ul class="service-list">
+            <li><i class="fa-solid fa-check"></i> <strong>Personalizzazione Abbigliamento:</strong> Magliette, felpe e divise su misura[cite: 1].</li>
+            <li><i class="fa-solid fa-check"></i> <strong>Oggettistica Personalizzata:</strong> Gadget promozionali unici[cite: 1].</li>
+            <li><i class="fa-solid fa-check"></i> <strong>Articoli per Eventi:</strong> Soluzioni mirate per manifestazioni e ricorrenze[cite: 1].</li>
+            <li><i class="fa-solid fa-check"></i> <strong>Tecnologie Avanzate:</strong> Stampa DTF di altissima qualità e durata.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Generatore Magico -->
+      <div class="info-card" style="text-align: center;">
+        <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Motto del Giorno</h2>
+        <p>Schiaccia il pulsante magico qui sotto per generare un'ispirazione personalizzata:</p>
+        <button class="magic-btn" onclick="generateMagicText()">
+          <i class="fa-solid fa-bolt"></i> Genera Magia
+        </button>
+        <div id="magic-output"></div>
+      </div>
+
+      <!-- Pulsante per tornare indietro -->
+      <button class="magic-btn" style="background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid var(--card-border);" onclick="switchView('home')">
+        <i class="fa-solid fa-arrow-left"></i> Torna al Biglietto da Visita
+      </button>
+    </div>
+  </div>
+
+  <!-- SCRIPT DI CONTROLLO -->
+  <script>
+    function enterSite() {
+      const splash = document.getElementById('splash-screen');
+      splash.classList.add('hidden');
+      switchView('home');
+    }
+
+    function switchView(viewName) {
+      const homeView = document.getElementById('home-view');
+      const chiSiamoView = document.getElementById('chi-siamo-view');
+
+      if (viewName === 'home') {
+        homeView.classList.add('active');
+        chiSiamoView.classList.remove('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } else if (viewName === 'chi-siamo') {
+        chiSiamoView.classList.add('active');
+        homeView.classList.remove('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+    }
+
+    function toggleDetails() {
+      const panel = document.getElementById('details-panel');
+      panel.classList.toggle('show');
+    }
+
+    const quotes = [
+      "«La qualità non è mai un caso; è sempre il risultato di un elevato sforzo intelligente.»",
+      "«Il dettaglio fa la perfezione e la perfezione non è un dettaglio.»",
+      "«Dai vita alla tua brand identity con i materiali d'eccellenza Shorpy.»",
+      "«Ogni stampa racconta chi sei e cosa sai fare.»",
+      "«Creatività, precisione e passione dal 2010[cite: 3, 4]. Pronti a stupire.»"
+    ];
+
+    function generateMagicText() {
+      const output = document.getElementById('magic-output');
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      output.style.opacity = 0;
+      setTimeout(() => {
+        output.textContent = quotes[randomIndex];
+        output.style.opacity = 1;
+        output.style.transition = "opacity 0.4s ease";
+      }, 150);
+    }
+  </script>
+
+</body>
+</html>
